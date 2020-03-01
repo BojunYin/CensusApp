@@ -7,7 +7,6 @@ library(maps)
 library(mapproj)
 #runUrl( "http://pages.stat.wisc.edu/~karlrohe/ds479/code/census-app.zip")
 counties <- readRDS("data/counties.rds")
-head(counties)
 source("helpers.R")
 percent_map(counties$white, "darkgreen", "% White")
 # main part
@@ -32,11 +31,9 @@ ui <- fluidPage(
                   min = 0, max = 100, value = c(0, 100))
     ),
     
-    mainPanel(
-      textOutput("selected_var")   # here is the output!
+    mainPanel(plotOutput("map"))   # here is the output!
     )
   )
-)
 
 # Notice that textOutput takes an argument, the character string 
 #   "selected_var". Each of the *Output functions require a single 
@@ -57,7 +54,7 @@ ui <- fluidPage(
 #}
 server <- function(input, output) {
   
-  output$map <- renderPlot({ 
+  output$map <- renderPlot({
     data <- switch(input$var,
                    "Percent White" = counties$white,
                    "Percent Black" = counties$black,
